@@ -1,67 +1,96 @@
-# Engineering Memory v1.0
+# Engineering Memory
 
-Engineering Memory is an AI-powered enterprise assistant designed to answer highly specific technical questions by referencing your organization's codebase, official documentation, and issue tracker history.
+**A highly rigorous, evaluated hybrid-retrieval system built to answer software engineering questions using your organization's codebase, documentation, and issue tracker.**
 
-## System Architecture
-* **Frontend:** Streamlit container for an interactive, conversational UI.
-* **Backend API:** FastAPI container utilizing honest, faceted "hybrid search".
-* **Database Layer:** Neon Serverless PostgreSQL.
-  * **Vector Index:** `pgvector` with HNSW for semantic search (`embedding <=> query_embedding`).
-  * **FTS Index:** Native PostgreSQL `websearch_to_tsquery` for exact keyword matches.
-* **Inference Engine:** Generation and LLM-as-a-Judge evaluation via the Groq API (`llama-3.1-8b-instant`).
+![Demo](demo.gif)
 
-## Evaluation Methodology (Hybrid Benchmark)
+## Why This Project Exists
 
-To rigorously evaluate the system's accuracy, we decoupled source retrieval performance from generation accuracy and tested the system against a 50-question hybrid dataset tracking difficulty and generalization capability.
+Engineers spend an enormous amount of time searching through sprawling codebases, outdated wikis, and closed GitHub issues. While many "RAG Chatbots" exist, they often rely on naive semantic search that hallucinates or fails on complex, multi-hop engineering reasoning.
 
-### The Dataset: 50 Questions
-To avoid benchmark leakage, the questions were strictly divided into three generation tiers:
-- **20 Synthetic Questions:** Reverse-generated from exact database chunks to act as a retrieval sanity check.
-- **20 Human Questions:** Hand-crafted using various engineering personas (maintainer, API user, bug investigator) to simulate messy, natural queries.
-- **10 Adversarial Questions:** Intentionally complex questions designed to break the confidence engine and embedding model.
+Engineering Memory was built to solve this by providing **honest, evidence-backed answers** with measurable retrieval quality. It separates generation accuracy from retrieval performance, relying on a mathematically sound Confidence Engine to ensure developers can trust the output.
 
-*Note on Benchmark Transparency:* During development, the initial benchmark dataset labels were audited and corrected after manual review. Several questions rigidly expected bug-tracker tickets when official documentation provided a superior, authoritative answer. The labels were adjusted to utilize an `acceptable_sources` array to reflect the true optimal sources.
+## Features
+- **Hybrid Search Engine:** Combines PostgreSQL FTS (Full Text Search) for exact keyword matches with `pgvector` HNSW for semantic understanding.
+- **Honest Confidence Engine:** Evaluates the diversity and relevance of retrieved sources (`DOC`, `CODE`, `ISSUE`) before generating an answer. If evidence is lacking, the system abstains instead of hallucinating.
+- **Decoupled Architecture:** Clean separation between the FastAPI inference backend and the Streamlit conversational frontend.
+- **Rigorous Evaluation Suite:** Includes an automated 50-question hybrid benchmark to test retrieval Hit@3 and LLM-as-a-Judge answer accuracy.
 
-### Benchmark Execution Report
+## Architecture
 
-```text
---- Final Engineering Benchmark Report ---
-Overall:
-  Total Questions: 50
-  Hit@3: 54.0%
-  Answer Accuracy: 10.0%
-  Latency P95: 4.93s
+![Architecture](docs/architecture.png)
 
-By Generation Type:
-  Synthetic = 65.0% Hit@3 | 5.0% Ans
-  Human = 55.0% Hit@3 | 20.0% Ans
-  Adversarial = 30.0% Hit@3 | 0.0% Ans
+1. **Frontend:** Streamlit Container
+2. **Backend API:** FastAPI Container
+3. **Database Layer:** Neon Serverless PostgreSQL (`pgvector`, `tsvector`)
+4. **Embeddings:** Local SentenceTransformers (`BAAI/bge-small-en-v1.5`)
+5. **Generation & Evaluation:** Groq API (`llama-3.1-8b-instant`)
 
-By Difficulty:
-  Easy = 56.0% Hit@3 | 4.0% Ans
-  Medium = 70.0% Hit@3 | 30.0% Ans
-  Hard = 40.0% Hit@3 | 6.7% Ans
+## Evaluation Methodology & Results
 
-By Category:
-  Docs = 100.0% Hit@3
-  Api = 53.1% Hit@3
-  Architecture = 54.5% Hit@3
-  Dependencies = 40.0% Hit@3
+Most RAG projects hide behind 3-5 successful queries. Engineering Memory was subjected to a grueling 50-question hybrid benchmark, explicitly designed to test its limits. 
 
-Evidence Precision:
-  DOC = 100.0% Match Rate
-  CODE = 96.9% Match Rate
+The dataset is divided into:
+- 20 Synthetic Questions (Sanity check)
+- 20 Human Questions (Natural phrasing)
+- 10 Adversarial Questions (Multi-hop edge cases)
 
-Failure Analysis:
-  Retrieval Failures = 22
-  Reasoning Failures = 22
-```
+**Overall Hit@3: 54.0%**
+- **Documentation Retrieval:** 100% Hit@3
+- **Adversarial Retrieval:** 30% Hit@3
 
-## Next Steps for v1.1
-The retrieval pipeline is working adequately, and the Evidence Precision is remarkably high (~97%+). The final engineering focus for the next iteration is diagnosing the massive Generator/Judge disparity.
+*For the full deep-dive into the methodology and detailed aggregator metrics, read the [BENCHMARK.md](BENCHMARK.md).*
 
-1. **Confusion Matrix Audit:** Review the `human_audit.csv` output for all 22 reasoning failures to determine if failures are caused by:
-   - **A:** Generator hallucinating or failing synthesis (llama-3.1-8b limits).
-   - **B:** The LLM Judge being overly strict on phrasing.
-   - **C:** Poor system prompts causing the Generator to ignore retrieved evidence.
-2. **Handle API Throttling:** Some queries timed out due to aggressive Groq API rate limits (HTTP 429). Implement robust `tenacity` retry logic to stabilize benchmark execution.
+## What I Learned (Root Cause Analysis)
+
+The most valuable takeaway from this project was not the vector search itself, but the debugging loop: **Measure → Observe → Trace → Prove → Fix.**
+
+1. **Retrieval failures are not always embedding failures.** When Adversarial retrieval dropped to 30%, it was tempting to swap to a larger embedding model or add a reranker.
+2. **Query tracing is more useful than changing models.** By writing a custom `trace_query.py` script, we traced the exact chunks the vector and FTS engines were fetching.
+3. **Semantic context loss during ingestion breaks retrieval.** We proved that our naive token-window chunking algorithm was splitting explanatory markdown text away from the corresponding Python code examples. The information was destroyed at the database level, meaning no reranker or embedding model could ever recover it.
+4. **Benchmarking exposes what demos hide.** Without the 50-question hybrid dataset, the project would have looked flawless on simple documentation lookups. The benchmark exposed the exact ingestion flaw that will drive the v1.1 architecture.
+
+## Known Limitations
+
+- **Adversarial Retrieval is Weak:** Performance on multi-hop reasoning remains significantly lower than straight documentation retrieval.
+- **Naive Chunking:** The current fixed-window chunking destroys markdown semantic structure (separating Headings from Paragraphs from Code blocks).
+- **Confidence Metric:** The Confidence Engine currently measures source *diversity* (e.g. DOC + CODE) rather than absolute evidence *relevance*.
+- **Single Repository:** The benchmark dataset is currently based exclusively on the `HTTPX` repository history.
+
+## Installation / Quick Start
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/rohitkhamrai/Engineering-Memory.git
+   cd Engineering-Memory
+   ```
+2. **Set up Virtual Environment:**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: .\venv\Scripts\Activate.ps1
+   pip install -r requirements.txt
+   ```
+3. **Configure Environment:**
+   Export your database and inference keys in the terminal or `.env` file:
+   ```bash
+   export DATABASE_URL="postgresql://user:pass@host/dbname"
+   export GROQ_API_KEY="your_groq_api_key"
+   ```
+4. **Run the Backend (FastAPI):**
+   ```bash
+   uvicorn app.api.main:app --reload
+   ```
+5. **Run the Frontend (Streamlit):**
+   ```bash
+   streamlit run app/ui/app.py
+   ```
+
+## Example Queries
+
+Once running, try testing the system across varying difficulty tiers:
+- **Easy:** *"What is the default timeout value for AsyncClient?"*
+- **Medium:** *"How do I mount a custom transport?"*
+- **Hard:** *"Why might SSL verification fail specifically during a redirect even if the initial request succeeded?"*
+
+## Future Work (v1.1)
+The immediate focus for v1.1 is migrating from token-based chunking to a **Markdown-Aware Parser** that preserves document hierarchy (Headings + Paragraphs + Code blocks as a single cohesive unit). We will re-ingest the corpus and re-run the benchmark to mathematically prove the retrieval improvement before introducing any advanced AI Agents or Graph databases.
