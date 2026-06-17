@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - "8000:8000"
+    environment:
+      - NEON_DATABASE_URL=${NEON_DATABASE_URL}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      # host.docker.internal allows Docker containers to access localhost of the host machine
+      - OLLAMA_URL=http://host.docker.internal:11434
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./app:/app/app
+
+  ui:
+    build:
+      context: .
+      dockerfile: Dockerfile.ui
+    ports:
+      - "8501:8501"
+    environment:
+      - API_URL=http://api:8000/api/ask
+    depends_on:
+      - api
+    volumes:
+      - ./app:/app/app

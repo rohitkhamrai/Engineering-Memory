@@ -1,0 +1,858 @@
+[
+  {
+    "question": "How do I implement a request timeout in an httpx client that will be propagated throughout the entire call stack?",
+    "category": "Docs",
+    "difficulty": "easy",
+    "generation_type": "synthetic",
+    "acceptable_sources": [
+      "docs/advanced/extensions.md"
+    ],
+    "expected_evidence": [
+      "DOC"
+    ],
+    "key_facts": [
+      "The answer matches the source file exactly."
+    ],
+    "failure_mode": "retrieval"
+  },
+  {
+    "question": "What is the current policy regarding the handling of URLs with unescaped '@' characters in the username or password fields?",
+    "category": "API",
+    "difficulty": "easy",
+    "generation_type": "synthetic",
+    "acceptable_sources": [
+      "CHANGELOG.md"
+    ],
+    "expected_evidence": [
+      "DOC"
+    ],
+    "key_facts": [
+      "The answer matches the source file exactly."
+    ],
+    "failure_mode": "retrieval"
+  },
+  {
+    "question": "What new features or enhancements were added to support HTTP multipart uploads in this version of the library?",
+    "category": "API",
+    "difficulty": "easy",
+    "generation_type": "synthetic",
+    "acceptable_sources": [
+      "CHANGELOG.md"
+    ],
+    "expected_evidence": [
+      "DOC"
+    ],
+    "key_facts": [
+      "The answer matches the source file exactly."
+    ],
+    "failure_mode": "retrieval"
+  },
+  {
+    "question": "How can I determine the HTTP version used in the response from a GET request made using the httpx library?",
+    "category": "Docs",
+    "difficulty": "easy",
+    "generation_type": "synthetic",
+    "acceptable_sources": [
+      "docs/advanced/extensions.md"
+    ],
+    "expected_evidence": [
+      "DOC"
+    ],
+    "key_facts": [
+      "The answer matches the source file exactly."
+    ],
+    "failure_mode": "retrieval"
+  },
+  {
+    "question": "How can I use a SOCKS5 proxy in my Python application to make HTTP requests?",
+    "category": "API",
+    "difficulty": "easy",
+    "generation_type": "synthetic",
+    "acceptable_sources": [
+      "CHANGELOG.md"
+    ],
+    "expected_evidence": [
+      "DOC"
+    ],
+    "key_facts": [
+      "The answer matches the source file exactly."
+    ],
+    "failure_mode": "retrieval"
+  },
+  {
+    "question": "When using the `-v/--verbose` flag, what additional information will be displayed by the command-line client?",
+    "category": "API",
+    "difficulty": "easy",
+    "generation_type": "synthetic",
+    "acceptable_sources": [
+      "CHANGELOG.md"
+    ],
+    "expected_evidence": [
+      "DOC"
+    ],
+    "key_facts": [
+      "The answer matches the source file exactly."
+    ],
+    "failure_mode": "retrieval"
+  },
+  {
+    "question": "What design changes were made in the 0.20.0 release, specifically regarding how the client handles redirect responses?",
+    "category": "API",
+    "difficulty": "easy",
+    "generation_type": "synthetic",
+    "acceptable_sources": [
+      "CHANGELOG.md"
+    ],
+    "expected_evidence": [
+      "DOC"
+    ],
+    "key_facts": [
+      "The answer matches the source file exactly."
+    ],
+    "failure_mode": "retrieval"
+  },
+  {
+    "question": "How can I configure a client instance to automatically follow redirects in my HTTP requests?",
+    "category": "API",
+    "difficulty": "easy",
+    "generation_type": "synthetic",
+    "acceptable_sources": [
+      "CHANGELOG.md"
+    ],
+    "expected_evidence": [
+      "DOC"
+    ],
+    "key_facts": [
+      "The answer matches the source file exactly."
+    ],
+    "failure_mode": "retrieval"
+  },
+  {
+    "question": "How do I add support for allowing or disallowing redirects when using the Client class in this library?",
+    "category": "API",
+    "difficulty": "easy",
+    "generation_type": "synthetic",
+    "acceptable_sources": [
+      "CHANGELOG.md"
+    ],
+    "expected_evidence": [
+      "DOC"
+    ],
+    "key_facts": [
+      "The answer matches the source file exactly."
+    ],
+    "failure_mode": "retrieval"
+  },
+  {
+    "question": "What changes were made to the library's dependencies in Pull #1605?",
+    "category": "API",
+    "difficulty": "easy",
+    "generation_type": "synthetic",
+    "acceptable_sources": [
+      "CHANGELOG.md"
+    ],
+    "expected_evidence": [
+      "DOC"
+    ],
+    "key_facts": [
+      "The answer matches the source file exactly."
+    ],
+    "failure_mode": "retrieval"
+  },
+  {
+    "question": "What is the correct way to access the elapsed time of a request/response cycle when the response has not yet been read or closed?",
+    "category": "API",
+    "difficulty": "easy",
+    "generation_type": "synthetic",
+    "acceptable_sources": [
+      "httpx/_models.py"
+    ],
+    "expected_evidence": [
+      "CODE"
+    ],
+    "key_facts": [
+      "The answer matches the source file exactly."
+    ],
+    "failure_mode": "retrieval"
+  },
+  {
+    "question": "What parameters are available for use in an OPTIONS request to the given URL, given that the function does not accept a request body?",
+    "category": "API",
+    "difficulty": "easy",
+    "generation_type": "synthetic",
+    "acceptable_sources": [
+      "httpx/_api.py"
+    ],
+    "expected_evidence": [
+      "CODE"
+    ],
+    "key_facts": [
+      "The answer matches the source file exactly."
+    ],
+    "failure_mode": "retrieval"
+  },
+  {
+    "question": "What are the default values for the `follow_redirects` and `verify` parameters in the `head` function?",
+    "category": "API",
+    "difficulty": "easy",
+    "generation_type": "synthetic",
+    "acceptable_sources": [
+      "httpx/_api.py"
+    ],
+    "expected_evidence": [
+      "CODE"
+    ],
+    "key_facts": [
+      "The answer matches the source file exactly."
+    ],
+    "failure_mode": "retrieval"
+  },
+  {
+    "question": "What parameters are not available on the `request` function when making a `HEAD` request?",
+    "category": "API",
+    "difficulty": "easy",
+    "generation_type": "synthetic",
+    "acceptable_sources": [
+      "httpx/_api.py"
+    ],
+    "expected_evidence": [
+      "CODE"
+    ],
+    "key_facts": [
+      "The answer matches the source file exactly."
+    ],
+    "failure_mode": "retrieval"
+  },
+  {
+    "question": "What is the correct way to test a redirect response with a status code of 302 using the httpx library in Python?",
+    "category": "API",
+    "difficulty": "easy",
+    "generation_type": "synthetic",
+    "acceptable_sources": [
+      "tests/client/test_redirects.py"
+    ],
+    "expected_evidence": [
+      "CODE"
+    ],
+    "key_facts": [
+      "The answer matches the source file exactly."
+    ],
+    "failure_mode": "retrieval"
+  },
+  {
+    "question": "What are the default values for the `verify` parameter in the `post` function if it is not explicitly provided?",
+    "category": "API",
+    "difficulty": "easy",
+    "generation_type": "synthetic",
+    "acceptable_sources": [
+      "httpx/_api.py"
+    ],
+    "expected_evidence": [
+      "CODE"
+    ],
+    "key_facts": [
+      "The answer matches the source file exactly."
+    ],
+    "failure_mode": "retrieval"
+  },
+  {
+    "question": "What are the available parameters for the `request` function in this code snippet, and where can I find their documentation?",
+    "category": "API",
+    "difficulty": "easy",
+    "generation_type": "synthetic",
+    "acceptable_sources": [
+      "httpx/_api.py"
+    ],
+    "expected_evidence": [
+      "CODE"
+    ],
+    "key_facts": [
+      "The answer matches the source file exactly."
+    ],
+    "failure_mode": "retrieval"
+  },
+  {
+    "question": "What is the default value for the `verify` parameter in the `put` function?",
+    "category": "API",
+    "difficulty": "easy",
+    "generation_type": "synthetic",
+    "acceptable_sources": [
+      "httpx/_api.py"
+    ],
+    "expected_evidence": [
+      "CODE"
+    ],
+    "key_facts": [
+      "The answer matches the source file exactly."
+    ],
+    "failure_mode": "retrieval"
+  },
+  {
+    "question": "What are all the available parameters that can be passed to the `request` function in this code snippet?",
+    "category": "API",
+    "difficulty": "easy",
+    "generation_type": "synthetic",
+    "acceptable_sources": [
+      "httpx/_api.py"
+    ],
+    "expected_evidence": [
+      "CODE"
+    ],
+    "key_facts": [
+      "The answer matches the source file exactly."
+    ],
+    "failure_mode": "retrieval"
+  },
+  {
+    "question": "What is the default behavior for the `follow_redirects` parameter in the `patch` function?",
+    "category": "API",
+    "difficulty": "easy",
+    "generation_type": "synthetic",
+    "acceptable_sources": [
+      "httpx/_api.py"
+    ],
+    "expected_evidence": [
+      "CODE"
+    ],
+    "key_facts": [
+      "The answer matches the source file exactly."
+    ],
+    "failure_mode": "retrieval"
+  },
+  {
+    "question": "How do I set a global timeout for all requests?",
+    "category": "API",
+    "difficulty": "medium",
+    "generation_type": "human",
+    "acceptable_sources": [
+      "docs/advanced/timeouts.md",
+      "httpx/_config.py"
+    ],
+    "expected_evidence": [
+      "DOC",
+      "CODE"
+    ],
+    "key_facts": [
+      "Use the timeout parameter on the Client instantiation",
+      "Pass a Timeout object or float"
+    ],
+    "failure_mode": "reasoning"
+  },
+  {
+    "question": "What happens if I stream a response but forget to close it?",
+    "category": "API",
+    "difficulty": "medium",
+    "generation_type": "human",
+    "acceptable_sources": [
+      "docs/quickstart.md",
+      "httpx/_models.py"
+    ],
+    "expected_evidence": [
+      "DOC"
+    ],
+    "key_facts": [
+      "Connection will not be released back to the pool",
+      "Causes resource leaks"
+    ],
+    "failure_mode": "reasoning"
+  },
+  {
+    "question": "How do I mount a custom transport?",
+    "category": "Architecture",
+    "difficulty": "medium",
+    "generation_type": "human",
+    "acceptable_sources": [
+      "httpx/_client.py",
+      "docs/advanced/transports.md"
+    ],
+    "expected_evidence": [
+      "DOC",
+      "CODE"
+    ],
+    "key_facts": [
+      "Call client.mount()",
+      "Pass prefix and transport instance"
+    ],
+    "failure_mode": "reasoning"
+  },
+  {
+    "question": "Can HTTPX handle HTTP/2 connections?",
+    "category": "Architecture",
+    "difficulty": "easy",
+    "generation_type": "human",
+    "acceptable_sources": [
+      "docs/http2.md",
+      "httpx/_client.py"
+    ],
+    "expected_evidence": [
+      "DOC"
+    ],
+    "key_facts": [
+      "Yes, by passing http2=True",
+      "Requires h2 package"
+    ],
+    "failure_mode": "reasoning"
+  },
+  {
+    "question": "How do I use an HTTP proxy with HTTPX?",
+    "category": "Dependencies",
+    "difficulty": "medium",
+    "generation_type": "human",
+    "acceptable_sources": [
+      "docs/advanced/proxies.md",
+      "httpx/_client.py"
+    ],
+    "expected_evidence": [
+      "DOC"
+    ],
+    "key_facts": [
+      "Pass proxies argument to Client",
+      "Use HTTPTransport with proxy_url"
+    ],
+    "failure_mode": "reasoning"
+  },
+  {
+    "question": "Does HTTPX support UNIX domain sockets?",
+    "category": "Architecture",
+    "difficulty": "hard",
+    "generation_type": "human",
+    "acceptable_sources": [
+      "httpx/_transports/default.py",
+      "docs/advanced/transports.md"
+    ],
+    "expected_evidence": [
+      "DOC",
+      "CODE"
+    ],
+    "key_facts": [
+      "Yes, via httpx.HTTPTransport(uds='/path/to/socket')"
+    ],
+    "failure_mode": "reasoning"
+  },
+  {
+    "question": "What is the default limits for connection pooling?",
+    "category": "API",
+    "difficulty": "medium",
+    "generation_type": "human",
+    "acceptable_sources": [
+      "httpx/_config.py"
+    ],
+    "expected_evidence": [
+      "CODE",
+      "DOC"
+    ],
+    "key_facts": [
+      "max_keepalive_connections=20",
+      "max_connections=100"
+    ],
+    "failure_mode": "reasoning"
+  },
+  {
+    "question": "How do I catch all HTTPX exceptions?",
+    "category": "API",
+    "difficulty": "easy",
+    "generation_type": "human",
+    "acceptable_sources": [
+      "httpx/_exceptions.py"
+    ],
+    "expected_evidence": [
+      "CODE",
+      "DOC"
+    ],
+    "key_facts": [
+      "Catch httpx.HTTPError",
+      "It is the base class for all exceptions"
+    ],
+    "failure_mode": "reasoning"
+  },
+  {
+    "question": "Why does AsyncClient require an async context manager?",
+    "category": "Architecture",
+    "difficulty": "hard",
+    "generation_type": "human",
+    "acceptable_sources": [
+      "httpx/_client.py"
+    ],
+    "expected_evidence": [
+      "CODE"
+    ],
+    "key_facts": [
+      "To ensure proper teardown of the connection pool",
+      "To safely close background tasks"
+    ],
+    "failure_mode": "reasoning"
+  },
+  {
+    "question": "How are redirects handled by default?",
+    "category": "API",
+    "difficulty": "medium",
+    "generation_type": "human",
+    "acceptable_sources": [
+      "httpx/_client.py",
+      "docs/quickstart.md"
+    ],
+    "expected_evidence": [
+      "DOC",
+      "CODE"
+    ],
+    "key_facts": [
+      "follow_redirects=False by default"
+    ],
+    "failure_mode": "reasoning"
+  },
+  {
+    "question": "Can I pass a custom SSL context?",
+    "category": "Dependencies",
+    "difficulty": "medium",
+    "generation_type": "human",
+    "acceptable_sources": [
+      "httpx/_config.py",
+      "docs/advanced/ssl.md"
+    ],
+    "expected_evidence": [
+      "DOC",
+      "CODE"
+    ],
+    "key_facts": [
+      "Yes, pass verify=ssl_context",
+      "Use ssl.create_default_context()"
+    ],
+    "failure_mode": "reasoning"
+  },
+  {
+    "question": "How do I mock HTTPX requests in pytest?",
+    "category": "Dependencies",
+    "difficulty": "medium",
+    "generation_type": "human",
+    "acceptable_sources": [
+      "docs/advanced/transports.md",
+      "httpx/_transports/mock.py"
+    ],
+    "expected_evidence": [
+      "DOC"
+    ],
+    "key_facts": [
+      "Use httpx.MockTransport",
+      "Use third-party libraries like respx"
+    ],
+    "failure_mode": "reasoning"
+  },
+  {
+    "question": "Is it safe to share a Client across threads?",
+    "category": "Architecture",
+    "difficulty": "hard",
+    "generation_type": "human",
+    "acceptable_sources": [
+      "httpx/_client.py",
+      "docs/advanced/clients.md"
+    ],
+    "expected_evidence": [
+      "DOC",
+      "CODE"
+    ],
+    "key_facts": [
+      "Yes, the Client is thread-safe",
+      "Connection pool is thread-safe"
+    ],
+    "failure_mode": "reasoning"
+  },
+  {
+    "question": "How do I log HTTP requests in HTTPX?",
+    "category": "Dependencies",
+    "difficulty": "medium",
+    "generation_type": "human",
+    "acceptable_sources": [
+      "docs/environment_variables.md"
+    ],
+    "expected_evidence": [
+      "DOC"
+    ],
+    "key_facts": [
+      "Set HTTPX_LOG_LEVEL environment variable",
+      "Enable standard python logging for 'httpx'"
+    ],
+    "failure_mode": "reasoning"
+  },
+  {
+    "question": "What happens to cookies across redirects?",
+    "category": "API",
+    "difficulty": "hard",
+    "generation_type": "human",
+    "acceptable_sources": [
+      "httpx/_client.py",
+      "httpx/_models.py"
+    ],
+    "expected_evidence": [
+      "CODE",
+      "DOC"
+    ],
+    "key_facts": [
+      "Cookies are persisted across redirects within the same domain",
+      "Managed by the CookieJar"
+    ],
+    "failure_mode": "reasoning"
+  },
+  {
+    "question": "Does HTTPX automatically encode URL parameters?",
+    "category": "API",
+    "difficulty": "easy",
+    "generation_type": "human",
+    "acceptable_sources": [
+      "httpx/_models.py",
+      "httpx/_url.py"
+    ],
+    "expected_evidence": [
+      "CODE"
+    ],
+    "key_facts": [
+      "Yes, it encodes query parameters passed via params kwarg",
+      "Uses httpx.QueryParams"
+    ],
+    "failure_mode": "reasoning"
+  },
+  {
+    "question": "Can I stream file uploads?",
+    "category": "API",
+    "difficulty": "medium",
+    "generation_type": "human",
+    "acceptable_sources": [
+      "docs/quickstart.md",
+      "httpx/_content.py"
+    ],
+    "expected_evidence": [
+      "DOC",
+      "CODE"
+    ],
+    "key_facts": [
+      "Yes, pass an iterator or generator to the data or files kwarg"
+    ],
+    "failure_mode": "reasoning"
+  },
+  {
+    "question": "How do I define a custom retry strategy?",
+    "category": "Architecture",
+    "difficulty": "hard",
+    "generation_type": "human",
+    "acceptable_sources": [
+      "httpx/_transports/default.py",
+      "httpx/_client.py"
+    ],
+    "expected_evidence": [
+      "CODE",
+      "DOC"
+    ],
+    "key_facts": [
+      "Pass a custom Transport with retry logic",
+      "HTTPX natively only retries connection errors if configured"
+    ],
+    "failure_mode": "reasoning"
+  },
+  {
+    "question": "What is the difference between data and json kwargs?",
+    "category": "API",
+    "difficulty": "easy",
+    "generation_type": "human",
+    "acceptable_sources": [
+      "httpx/_client.py",
+      "docs/quickstart.md"
+    ],
+    "expected_evidence": [
+      "DOC"
+    ],
+    "key_facts": [
+      "data is for form-encoded or raw bytes",
+      "json automatically serializes dicts and sets Content-Type to application/json"
+    ],
+    "failure_mode": "reasoning"
+  },
+  {
+    "question": "How do I send custom headers in every request?",
+    "category": "API",
+    "difficulty": "easy",
+    "generation_type": "human",
+    "acceptable_sources": [
+      "httpx/_client.py",
+      "docs/advanced/clients.md"
+    ],
+    "expected_evidence": [
+      "DOC"
+    ],
+    "key_facts": [
+      "Pass the headers kwarg during Client instantiation"
+    ],
+    "failure_mode": "reasoning"
+  },
+  {
+    "question": "Why might SSL verification fail specifically during a redirect even if the initial request succeeded?",
+    "category": "Architecture",
+    "difficulty": "hard",
+    "generation_type": "adversarial",
+    "acceptable_sources": [
+      "httpx/_client.py",
+      "docs/advanced/ssl.md"
+    ],
+    "expected_evidence": [
+      "CODE",
+      "DOC"
+    ],
+    "key_facts": [
+      "Trust boundaries may change on redirect",
+      "SSL context re-evaluated for cross-origin redirects"
+    ],
+    "failure_mode": "reasoning"
+  },
+  {
+    "question": "What part of the code physically determines whether a ConnectTimeout or a ReadTimeout is raised?",
+    "category": "API",
+    "difficulty": "hard",
+    "generation_type": "adversarial",
+    "acceptable_sources": [
+      "httpx/_exceptions.py",
+      "httpx/_transports/default.py"
+    ],
+    "expected_evidence": [
+      "CODE"
+    ],
+    "key_facts": [
+      "The transport layer handles low-level timeouts",
+      "ConnectTimeout occurs during socket creation",
+      "ReadTimeout occurs while waiting for data"
+    ],
+    "failure_mode": "retrieval"
+  },
+  {
+    "question": "If I subclass AsyncClient and override send(), do I still benefit from connection pooling?",
+    "category": "Architecture",
+    "difficulty": "hard",
+    "generation_type": "adversarial",
+    "acceptable_sources": [
+      "httpx/_client.py"
+    ],
+    "expected_evidence": [
+      "CODE"
+    ],
+    "key_facts": [
+      "Yes, pooling is handled by the Transport layer, not send()"
+    ],
+    "failure_mode": "reasoning"
+  },
+  {
+    "question": "How does the BaseTransport interface enforce the async/sync separation?",
+    "category": "Architecture",
+    "difficulty": "hard",
+    "generation_type": "adversarial",
+    "acceptable_sources": [
+      "httpx/_transports/base.py"
+    ],
+    "expected_evidence": [
+      "CODE"
+    ],
+    "key_facts": [
+      "It defines handle_request for sync and handle_async_request for async"
+    ],
+    "failure_mode": "reasoning"
+  },
+  {
+    "question": "Can a single Client instance use both HTTP/1.1 and HTTP/2 simultaneously?",
+    "category": "Architecture",
+    "difficulty": "hard",
+    "generation_type": "adversarial",
+    "acceptable_sources": [
+      "httpx/_client.py",
+      "httpx/_transports/default.py"
+    ],
+    "expected_evidence": [
+      "CODE"
+    ],
+    "key_facts": [
+      "Yes, HTTPTransport negotiates via ALPN"
+    ],
+    "failure_mode": "reasoning"
+  },
+  {
+    "question": "What happens if a response is streamed but the server drops the connection mid-stream?",
+    "category": "API",
+    "difficulty": "hard",
+    "generation_type": "adversarial",
+    "acceptable_sources": [
+      "httpx/_models.py",
+      "httpx/_exceptions.py"
+    ],
+    "expected_evidence": [
+      "CODE",
+      "DOC"
+    ],
+    "key_facts": [
+      "Raises ReadError or IncompleteRead"
+    ],
+    "failure_mode": "reasoning"
+  },
+  {
+    "question": "Is it possible to pass a raw socket to HTTPX instead of a URL?",
+    "category": "Architecture",
+    "difficulty": "hard",
+    "generation_type": "adversarial",
+    "acceptable_sources": [
+      "httpx/_transports/default.py"
+    ],
+    "expected_evidence": [
+      "CODE",
+      "DOC"
+    ],
+    "key_facts": [
+      "Only via UNIX Domain Sockets (uds kwarg), not arbitrary sockets"
+    ],
+    "failure_mode": "reasoning"
+  },
+  {
+    "question": "How does HTTPX prevent memory exhaustion when downloading a 10GB file?",
+    "category": "Dependencies",
+    "difficulty": "hard",
+    "generation_type": "adversarial",
+    "acceptable_sources": [
+      "httpx/_models.py",
+      "docs/quickstart.md"
+    ],
+    "expected_evidence": [
+      "CODE",
+      "DOC"
+    ],
+    "key_facts": [
+      "By using stream() and iter_bytes() to process in chunks without loading into memory"
+    ],
+    "failure_mode": "reasoning"
+  },
+  {
+    "question": "If I set follow_redirects=True, how does HTTPX prevent infinite redirect loops?",
+    "category": "API",
+    "difficulty": "hard",
+    "generation_type": "adversarial",
+    "acceptable_sources": [
+      "httpx/_client.py"
+    ],
+    "expected_evidence": [
+      "CODE"
+    ],
+    "key_facts": [
+      "Uses max_redirects configuration parameter, defaulting to 20"
+    ],
+    "failure_mode": "reasoning"
+  },
+  {
+    "question": "What is the exact order of precedence between request-level timeouts and client-level timeouts?",
+    "category": "API",
+    "difficulty": "hard",
+    "generation_type": "adversarial",
+    "acceptable_sources": [
+      "httpx/_client.py",
+      "httpx/_config.py"
+    ],
+    "expected_evidence": [
+      "CODE"
+    ],
+    "key_facts": [
+      "Request-level timeouts completely override client-level timeouts"
+    ],
+    "failure_mode": "reasoning"
+  }
+]

@@ -1,0 +1,408 @@
+Question,Difficulty,Generation,Hit Rank,Answer Correct (Judge),Latency,Gold Accuracy (Human Review),Generated Answer
+How do I implement a request timeout in an httpx client that will be propagated throughout the entire call stack?,easy,synthetic,1,NO,4.54s,,"You can implement a request timeout in an httpx client by using the `extensions` attribute of the `request` object. Here is how you can do it:
+
+```python
+client = httpx.Client()
+response = client.get(
+    ""https://www.example.com"",
+    extensions={""timeout"": {""connect"": 5.0}}
+)
+```
+
+This will ensure that the timeout values are associated with the request instance and passed throughout the call stack. However, it is recommended to use the higher level `timeout` API instead, as mentioned in the documentation."
+What is the current policy regarding the handling of URLs with unescaped '@' characters in the username or password fields?,easy,synthetic,1,NO,5.20s,,"Allow URLs where username or password contains unescaped '@'. (#2986). This indicates that the current policy allows URLs with unescaped '@' characters in the username or password fields. 
+
+However, it does not provide information on how the 'unescaped '@' characters are actually handled when they appear in the URL."
+What new features or enhancements were added to support HTTP multipart uploads in this version of the library?,easy,synthetic,2,NO,4.08s,,Streaming multipart uploads.
+How can I determine the HTTP version used in the response from a GET request made using the httpx library?,easy,synthetic,2,NO,4.44s,,"You can determine the HTTP version used in the response by examining the `.http_version` property on the response. 
+
+Specifically, you can use `response.http_version` to achieve this, like so:
+
+```python
+import httpx
+
+client = httpx.Client()
+response = client.get(""https://www.example.com"")
+print(response.http_version)  # Will print the HTTP version used in the response.
+```
+
+or, if you are using async:
+
+```python
+import httpx
+
+async def main():
+    async with httpx.AsyncClient() as client:
+        response = await client.get(""https://www.example.com"")
+        print(response.http_version)  # Will print the HTTP version used in the response.
+
+main()
+```"
+How can I use a SOCKS5 proxy in my Python application to make HTTP requests?,easy,synthetic,Miss,NO,4.82s,,"You can use the SOCKS5 proxy protocol by importing the `httpx` client library and creating an instance with the proxy URL. 
+
+Here's an example:
+```python
+import httpx
+
+# Replace the following placeholders with your actual SOCKS5 proxy server details
+proxy_url = 'socks5://user:pass@host:port'
+client = httpx.Client(proxy=proxy_url)
+
+# Now, when you call the `client` object to make HTTP requests, they will be proxied through the SOCKS5 server.
+response = client.get('http://example.com')
+```
+
+Alternatively, as shown in the context:
+
+```python
+import httpx
+
+client = httpx.Client(proxy='socks5://user:pass@host:port')
+# or
+client = httpx.Client(proxy='socks5h://user:pass@host:port')
+```
+
+Please ensure you have the `httpx` and `socksio` packages installed, which provide SOCKS support."
+"When using the `-v/--verbose` flag, what additional information will be displayed by the command-line client?",easy,synthetic,1,NO,4.20s,,"When using the `-v/--verbose` flag, the command-line client will display two additional pieces of information:
+
+1. Connection information
+2. Server certificate information
+
+This is explicitly mentioned in the provided CHANGELOG.md context."
+"What design changes were made in the 0.20.0 release, specifically regarding how the client handles redirect responses?",easy,synthetic,1,NO,3.87s,,"Redirect responses are no longer automatically followed, unless specifically requested. This has changed the behavior of the `.is_redirect` property, which now returns True for all 3xx responses."
+How can I configure a client instance to automatically follow redirects in my HTTP requests?,easy,synthetic,1,NO,4.93s,,"You can configure a client instance to automatically follow redirects in your HTTP requests by using the `Client` class from `httpx` and setting `follow_redirects=True`:
+
+```python
+client = httpx.Client(follow_redirects=True)
+```
+
+Alternatively, you can also set `follow_redirects=True` as an argument to the `get` method of a `Client` instance on a per-request basis."
+How do I add support for allowing or disallowing redirects when using the Client class in this library?,easy,synthetic,2,NO,4.49s,,"Based on the provided context, you can add support for allowing or disallowing redirects when using the Client class by passing a boolean value to the `follow_redirects` parameter.
+
+```python
+client = httpx.Client(follow_redirects=True)  # Enable redirects
+client = httpx.Client(follow_redirects=False)  # Disable redirects
+```
+
+Alternatively, you can also set it to `verify` with a boolean or a tuple as an argument in the `Client` class in the future, if the author of the httpx library decides so in future updates. However, based on the information provided, `follow_redirects` parameter should be used to control redirects.
+
+```python
+client = httpx.Client(follow_redirects=True)  # Enable redirects
+client = httpx.Client(follow_redirects=(True, 10))  # Enable redirects with max redirection limit of 10 (example not shown in the context)
+client = httpx.Client(follow_redirects=False)  # Disable redirects
+```"
+What changes were made to the library's dependencies in Pull #1605?,easy,synthetic,1,NO,4.48s,,"There is no information in the provided context about Pull request #1605, its changes, or any modifications made to the library's dependencies."
+What is the correct way to access the elapsed time of a request/response cycle when the response has not yet been read or closed?,easy,synthetic,1,NO,4.41s,,"According to the provided context, accessing the elapsed time before the response has been read or closed raises a `RuntimeError`. Therefore, there is no correct way to access the elapsed time in this scenario. The error message explicitly states that `'elapsed' may only be accessed after the response has been read or closed.` 
+
+However, attempting to access the elapsed time might look like this:
+```python
+try:
+    response.elapsed
+except RuntimeError as e:
+    print(e)
+```"
+"What parameters are available for use in an OPTIONS request to the given URL, given that the function does not accept a request body?",easy,synthetic,2,NO,4.35s,,"According to the provided context in httpx_api.py, the available parameters for an OPTIONS request are:
+
+1. url
+2. params
+3. headers
+4. cookies
+5. auth
+6. proxy
+7. follow_redirects
+8. verify
+9. timeout
+10. trust_env
+
+Note that `content`, `files`, `json`, and `data` parameters are not available as the function does not accept a request body, as specified in httpx_api.py and compatibility.md."
+What are the default values for the `follow_redirects` and `verify` parameters in the `head` function?,easy,synthetic,Miss,NO,3.97s,,"The context does not specify the default values for the `follow_redirects` and `verify` parameters in the `head` function.
+
+However, based on the information provided, it seems that `follow_redirects` might have a default value which is mentioned in the [DOC - docs\compatibility.md] section as follows: 
+
+""You can still enable behaviour to automatically follow redirects, but you need to 
+do so explicitly...""
+
+This suggests that the default behavior is not to follow redirects automatically."
+What parameters are not available on the `request` function when making a `HEAD` request?,easy,synthetic,1,YES,4.33s,,"`data`, `files`, `json`, and `content` parameters are not available on the `request` function when making a `HEAD` request."
+What is the correct way to test a redirect response with a status code of 302 using the httpx library in Python?,easy,synthetic,1,NO,4.85s,,"Based on the provided context, the correct way to test a redirect response with a status code of 302 using the httpx library in Python is demonstrated in the following code snippet:
+
+```python
+def test_redirect_302():
+    client = httpx.Client(transport=httpx.MockTransport(redirects))
+    response = client.post(""https://example.org/redirect_302"", follow_redirects=True)
+    assert response.status_code == httpx.codes.OK # The status_code of a successful 302 redirect would be 200 (OK) or, more specifically, httpx.codes.OK (201 was not shown in relation to redirects but this is the actual correct response code)
+    assert response.url == ""https://example.org/"" 
+    assert len(response.history) == 1
+```
+
+However, the code snippet actually tests for an HTTP 200 status code and one redirect, which would be the result of a successful 302 redirect. But if you are trying to test it more specifically for it being a redirect response that redirects to http://example.org/, the code is already correct:
+
+- You are following the redirect using `follow_redirects=True`. This will make the client move along the redirects and send the final request.
+- You correctly assert the status code to `httpx.codes.OK` which is equivalent to HTTP status code 200.
+- You correctly assert the URL of the response to ""https://example.org/"" which is the location the status code 200 redirect response is pointing to.
+- You assert the length of the history to 1, which would be the case if the response was immediately the final response. 
+
+If you were to assert it was specifically a redirect response using `is_redirect==True`, that would be `response.is_redirect` assuming you don't need that specific case to throw an exception, given that the documentation says it will return True for all 3xx status codes."
+What are the default values for the `verify` parameter in the `post` function if it is not explicitly provided?,easy,synthetic,Miss,NO,4.42s,,I couldn't find any information about the `post` function's `verify` parameter.
+"What are the available parameters for the `request` function in this code snippet, and where can I find their documentation?",easy,synthetic,Miss,NO,4.58s,,"The available parameters for the `request` function in this code snippet are:
+
+- `url`
+- `params` (but only if the value is not `None`, according to `docs\compatibility.md`)
+- `headers`
+- `cookies`
+- `auth`
+- `follow_redirects`
+- `timeout` (only available on `Client` instances, see `docs\compatibility.md`)
+- `extensions`
+
+You can find the documentation for these parameters by looking at the documentation for `httpx.request`, or on the documentation pages for individual HTTP methods (`httpx.get`, `httpx.post`, etc.) that are supported in this code snippet.
+
+According to the documentation, the `Client` instances also have these parameters available, and their documentation can be found at [advanced/clients.md](advanced/clients.md#client-instances)."
+What is the default value for the `verify` parameter in the `put` function?,easy,synthetic,Miss,NO,4.44s,,"Unfortunately, the provided context does not contain information about the default value for the `verify` parameter in the `put` function."
+What are all the available parameters that can be passed to the `request` function in this code snippet?,easy,synthetic,Miss,NO,4.66s,,"Based on the provided context, the available parameters that can be passed to the `request` function are:
+
+1. **method** (HTTP method for the new `Request` object): `GET`, `OPTIONS`, `HEAD`, `POST`, `PUT`, `PATCH`, or `DELETE`.
+2. **url** (URL for the new `Request` object).
+3. **params** (query parameters to include in the URL): 
+    - As a dictionary.
+    - As a sequence of two-tuples (note: this is not directly compatible with the `requests` library, use a dictionary with lists as values instead)
+4. **content** (binary content to include in the body of the request): as bytes or a byte iterator.
+5. **data** (form data to include in the body of the request): as a dictionary.
+6. **files** (dictionary of upload files to include in the body of the request).
+7. **json** (a JSON serializable object to include in the body of the request).
+8. **headers** (dictionary of HTTP headers to include in the request).
+9. **cookies** (dictionary of Cookie items to include in the request).
+10. **auth** (authentication class to use when sending the request).
+11. **proxy** (proxy URL where all the traffic should be routed).
+12. **timeout** (timeout configuration to use when sending the request).
+13. **follow_redirects** (enables or disables HTTP redirects).
+14. **verify** (enables or disables SSL verification: `True` to use the default CA bundle, `False` to disable verification, or an instance of `ssl.SSLContext` to use a custom context).
+15. **trust_env** (enables or disables usage of environment variables for configuration).
+16. **extensions** (not specified in the code snippet, but a parameter of the `request` function in the `httpx_client.py` file)."
+What is the default behavior for the `follow_redirects` parameter in the `patch` function?,easy,synthetic,Miss,NO,4.51s,,"There is no information in the provided context about the `patch` function. The documentation and code provided describe the default behavior and handling of the `follow_redirects` parameter for various operations, but not specifically for a `patch` function."
+How do I set a global timeout for all requests?,medium,human,3,NO,4.35s,,"To determine the correct answer, I must analyze the provided context. Given the context of setting a global timeout for all requests, I notice the following information relevant to the question:
+
+- In the [CODE - httpx\_client.py] section, there's a method named `_set_timeout` where a timeout is added to a request if it's not already set. However, it doesn't provide any information on setting a global timeout for all requests.
+
+- In the [DOC - docs\advanced\timeouts.md], it describes configuring timeout behavior. However, it does not explicitly state how to set a global timeout for all requests.
+
+- In [DOC - docs\compatibility.md], it mentions that to get the same behavior as Requests, you need to set the `timeout` parameter to `None`. However, it doesn't provide information on setting global timeouts.
+
+- The [CODE - tests\test_config.py] includes an example test where it creates a timeout with various parameters, but it doesn't cover setting a global timeout for all requests.
+
+Given this context, I must conclude that there isn't a clear, direct answer to how you can set a global timeout for all requests. The provided information mostly deals with setting timeouts on a per-request or client basis."
+What happens if I stream a response but forget to close it?,medium,human,2,NO,4.43s,,"The provided context does not contain information about what happens if you forget to close a streaming response. It shows a test case where close() is called, but not a scenario where close() is forgotten."
+How do I mount a custom transport?,medium,human,3,NO,4.96s,,"To mount a custom transport, you would use the `mounts` parameter in the `httpx.Client` constructor, passing in a dictionary with the transport URL as the key and the mounted transport as the value.
+
+Example:
+```python
+transport = httpx.MockTransport(unmounted)
+custom_transport = httpx.MockTransport(mounted)
+mounts = {""custom://"": custom_transport}
+
+with httpx.Client(transport=transport, mounts=mounts):
+    pass
+```
+Note that a complete example of a custom transport implementation is also provided in the documentation (`docs\advanced\transports.md`), as shown in your context."
+Can HTTPX handle HTTP/2 connections?,easy,human,Miss,NO,4.22s,,"Yes. According to the provided context, using an HTTPX Client will enable HTTP/2 and connection pooling for more efficient and long-lived connections."
+How do I use an HTTP proxy with HTTPX?,medium,human,Miss,NO,4.96s,,"According to the provided context:
+
+You can use an HTTP proxy with HTTPX by passing the proxy URL to the `mounts` argument. 
+
+However, the exact method is not shown in the provided code. It is mentioned in the documentation that for more detailed documentation, see [Mounting Transports](advanced/transports.md#mounting-transports) for more information.
+
+Additionally, the doc [HTTP Proxying](advanced/proxies.md#http-proxying) in the documentation provides more information on using proxies in HTTPX.
+
+In terms of code, when the `proxy.url.scheme` is in (""http"", ""https""), an HTTP proxy is used. This is shown in the [CODE - httpx_transports\default.py] section.
+
+You can use it as follows:
+- Pass the `proxy_url=httpcore.URL(scheme='http', host='your_host', port='port_number')` argument to the `HTTPProxy` class.
+- You may also need to pass other arguments like `proxy_auth`, `proxy_headers`, `proxy_ssl_context`, etc. depending on your needs.
+
+Here's an example:
+```
+from httpx import HTTPProxy, URL
+
+proxy_url = URL(scheme='http', host='your_host', port='port_number')
+proxy = HTTPProxy(
+    proxy_url=proxy_url,
+    proxy_auth=('username', 'password'),  # if you need authentication
+    proxy_headers={'header_name': 'header_value'},  # if you need custom headers
+    ssl_context=contextlib.null_context(),  # if you need a custom ssl context
+    # other arguments...
+)
+```"
+Does HTTPX support UNIX domain sockets?,hard,human,1,YES,4.05s,,"Yes. 
+
+This is stated in the provided context under the line of code:
+
+`transport = httpx.HTTPTransport(uds=""socket.uds"")` 
+
+In this line of code, UNIX domain sockets (uds) are being used."
+What is the default limits for connection pooling?,medium,human,3,YES,4.43s,,"Based on the provided context, the default limits for connection pooling can be found in the file `httpx_config.py`. 
+
+The default limits are as follows:
+
+- `max_connections`: 100
+- `max_keepalive_connections`: 20"
+How do I catch all HTTPX exceptions?,easy,human,Miss,NO,4.39s,,"`except httpx.Exception as exc:`
+
+This is a general exception class for HTTPX, covering most or all exceptions that may be raised when using the library."
+Why does AsyncClient require an async context manager?,hard,human,3,NO,4.16s,,"It is implied for asynchronous requests. 
+
+In the context provided, [DOC - docs\async.md] mentions that AsyncClient is required for asynchronous requests and also mentions that async with httpx.AsyncClient() is used for a context-managed client."
+Can I pass a custom SSL context?,medium,human,1,YES,4.71s,,"Yes, you can pass a custom SSL context. 
+
+This is mentioned in the provided context under the doc [docs\advanced\ssl.md]:
+
+""For more complex configurations you can pass an [SSL Context](https://docs.python.org/3/library/ssl.html) instance...""
+
+In the `httpx_config.py` code, there's also a function called `create_ssl_context` which generates and returns an SSL context instance, indicating that creating a custom SSL context is possible. 
+
+Additionally, the doc [docs\api.md] shows that an `ssl_context` parameter can be passed to the `__init__` method of a certain class, which can also be used to pass a custom SSL context. 
+
+The code under `httpx_config.py` also uses an `self.ssl_context` attribute, which suggests that an instance of SSLContext can be assigned to it, implying that a custom SSL context can be passed.
+
+Lastly, the code snippet in [docs\advanced\ssl.md] explicitly creates a custom SSL context with `ctx = ssl.create_default_context(cafile=""client.pem"")` and then passes it to the `httpx.Client` as an argument for verification, demonstrating that passing a custom SSL context is possible. 
+
+Therefore, the answer is yes, you can pass a custom SSL context."
+How do I mock HTTPX requests in pytest?,medium,human,2,YES,4.47s,,"According to the provided context, you can provide a pytest fixture to mock HTTPX within test cases. Additionally, it's suggested to look at third-party mocking libraries such as RESPX or the pytest-httpx library for more advanced use-cases.
+
+However, the provided code in tests\client\test_auth.py shows examples of mocking HTTPX requests in pytest using httpx.MockTransport and pytest.raises for assertions. 
+
+Here's an example of how you can mock HTTPX requests in pytest:
+
+```python
+class TestMyClient:
+    @pytest.fixture
+    def mock_client(self):
+        with httpx.Client(transport=httpx.MockTransport(app)) as client:
+            yield client
+
+    def test_my_function(self, mock_client):
+        with pytest.raises(httpx.ProtocolError):
+            mock_client.get(url, auth=auth)
+```
+
+You can create a similar fixture for async clients as well:
+
+```python
+class TestMyAsyncClient:
+    @pytest.fixture
+    def mock_async_client(self):
+        with httpx.AsyncClient(transport=httpx.MockTransport(app)) as client:
+            yield client
+
+    async def test_my_async_function(self, mock_async_client):
+        with pytest.raises(httpx.ProtocolError):
+            await mock_async_client.get(url, auth=auth)
+```"
+Is it safe to share a Client across threads?,hard,human,1,NO,4.50s,,"No safe answer can be provided based on the given context. However, I can infer a potential concern based on the code where the state of the client is checked and a RuntimeError is raised if the state is ClientState.CLOSED.
+
+But this information alone is not enough to assess thread-safety."
+How do I log HTTP requests in HTTPX?,medium,human,Miss,NO,4.48s,,"You can log HTTP requests in HTTPX by setting up Python's standard logging or using event hooks. Here are the steps:
+
+- **Method 1: Python's standard logging**
+
+  To log HTTP requests, you can use the below code:
+  ```
+  logger.info(
+    'HTTP Request: %s %s ""%s %d %s""',
+    request.method,
+    request.url,
+    response.http_version,
+    response.status_code,
+    response.reason_phrase,
+  )
+  ```
+  However, the code you provided (`httpx_client.py`) already has this logging statement, but it doesn't show the entire code snippet, so we can't see where `response` and `request` objects are set.
+
+- **Method 2: Using event hooks**
+
+  To log HTTP requests using event hooks, you can set up event hooks for `request` and `response` events in your HTTPX client. The code snippet already shows you how to use event hooks:
+
+  ```
+  client = httpx.Client(event_hooks={'request': [log_request], 'response': [log_response]})
+  ```
+  However, you would need to define `log_request` and `log_response` functions that contain your logging logic. 
+
+To answer your question directly: To log HTTP requests in HTTPX, there are two methods - using Python's standard logging or using event hooks."
+What happens to cookies across redirects?,hard,human,Miss,NO,4.32s,,"Based on the provided context, it can be inferred that cookies persist across redirects. 
+
+This can be deduced from the following pieces of information:
+- `follow_redirects=True` in `httpx.Client` in `test_redirect_cookie_behavior()` function which implies redirection behavior.
+- In `docs\compatibility.md`: You can still enable behaviour to automatically follow redirects. 
+
+However, the exact behavior of cookie persistence is not explicitly mentioned in the provided context."
+Does HTTPX automatically encode URL parameters?,easy,human,Miss,NO,4.53s,,"Based on the provided context, specifically from the code in tests\models\test_url.py, it appears HTTPX automatically encodes URL parameters.
+
+The test `test_param_requires_encoding` checks that parameters passed as form key-value pairs should be escaped (i.e., encoded). In this test, the URL object is created with a parameter ""u"" containing the percent sign (%) which needs to be escaped. The test then asserts that the URL string is correctly generated with the value of ""u"" being escaped to ""%25"". This suggests that HTTPX does have a mechanism for encoding URL parameters, but there may be exceptions or specific edge cases requiring additional handling, as hinted at in the ""ISSUE"" description."
+Can I stream file uploads?,medium,human,2,NO,4.48s,,"No, the context does not mention streaming file uploads explicitly. However, it does mention that ""File uploads are streaming by default, meaning that only one chunk will be loaded into memory at a time"" in the description of safe large file uploads."
+How do I define a custom retry strategy?,hard,human,Miss,NO,4.23s,,"Considering the provided context, it does not contain information on how to define a custom retry strategy. However, it does suggest checking [tenacity](https://github.com/jd/tenacity) for general-purpose retry behaviors.
+
+Also, there's a third-party package called `httpx-retries` ([GitHub](https://github.com/will-ockmore/httpx-retries) | [Documentation](https://will-ockmore.github.io/httpx-retries/)) which might provide information on defining custom retry strategies but it is not covered in the given context."
+What is the difference between data and json kwargs?,easy,human,Miss,NO,4.45s,,"There is no provided context that explicitly explains the difference between `data` and `json` kwargs. The given code and documentation context do not mention `data` kwargs.
+
+However, the `json` kwargs is used in the context of generating more compact JSON request bodies and for converting `QueryParams` objects to JSON-like query strings. 
+
+It is not possible to determine the difference between `data` and `json` kwargs based on the provided context."
+How do I send custom headers in every request?,easy,human,1,NO,4.32s,,"To apply a set of custom headers on every request, modify the ""headers"" property in `httpx_models.py` or pass them when initializing the client, however, the example given modifies ""headers"" directly in `httpx_models.py`.
+
+In `httpx_models.py`, it appears to be done like this:
+
+ `self.headers = Headers(auto_headers + self.headers.raw)`
+
+The actual way to set custom headers to be used in every request would need to be examined more closely, as the context only shows how the headers object is being updated in `httpx_models.py`, rather than how the custom headers are being passed."
+Why might SSL verification fail specifically during a redirect even if the initial request succeeded?,hard,adversarial,3,NO,4.64s,,"This context does not explicitly state why SSL verification might fail during a redirect. However, based on the information provided in [DOC - docs\advanced\ssl.md] it's a default behavior that httpx will verify HTTPS connections. 
+
+This does not offer a detailed reason about a redirect but does imply httpx is verifying connections. For more detailed information on why SSL verification might fail during a redirect, the context is missing, and it would be necessary to look elsewhere."
+What part of the code physically determines whether a ConnectTimeout or a ReadTimeout is raised?,hard,adversarial,Miss,NO,4.36s,,"Based on the provided context, the code that physically determines whether a ConnectTimeout or a ReadTimeout is raised is the configuration of the timeout objects.
+
+- A `ConnectTimeout` exception is raised when HTTPX is unable to connect within the time specified by the **connect** timeout.
+- A `ReadTimeout` exception is raised when HTTPX is unable to receive data within the time specified by the **read** timeout.
+
+This is explicitly stated in the [DOC - docs\advanced\timeouts.md] section. However, the actual code that determines this is not shown in the context, but rather described in the documentation. 
+
+To determine if it's a `ConnectTimeout` or a `ReadTimeout`, the code would be checking the timeout value for the **connect** field versus the **read** field in the timeout object. If it's checking the **connect** field, it would raise a `ConnectTimeout` exception, otherwise, it would raise a `ReadTimeout` exception."
+"If I subclass AsyncClient and override send(), do I still benefit from connection pooling?",hard,adversarial,Miss,NO,4.50s,,"No, if you subclass AsyncClient and override send(), you may not benefit from connection pooling as intended. The code snippets suggest that instantiating multiple client instances, such as using `async with` inside a ""hot loop"" or having a new instance for each send operation, can bypass connection pooling benefits. 
+
+However, this context does not provide specific details on whether overriding the `send()` method will directly bypass connection pooling or lead to connection leak issues. But based on the provided documentation and context, it implies that connection pooling is affected by the creation of multiple clients."
+How does the BaseTransport interface enforce the async/sync separation?,hard,adversarial,Miss,NO,4.55s,,"The BaseTransport interface does not appear to enforce the async/sync separation explicitly. It is defined in the [CODE - httpx\_transports\base.py] file, but there does not seem to be any method definition that would prevent synchronous usage.
+
+However, it is worth noting that AsyncBaseTransport (which is mentioned in the documentation as the base class to use when instantiating transport instances directly) has a __aenter__ method, which is typically used for asynchronous contexts. This might suggest some guidance towards using the transport in an asynchronous manner, but there's no code constraint enforcing this usage. 
+
+The explicit separation is enforced on the user level, by only documenting AsyncHTTPTransport for direct instantiation, and not BaseTransport."
+Can a single Client instance use both HTTP/1.1 and HTTP/2 simultaneously?,hard,adversarial,3,NO,4.23s,,"Based on the provided context, there is no information about a single Client instance using both HTTP/1.1 and HTTP/2 simultaneously.
+
+However, the following pieces of information are present:
+
+- HTTP/2 support is available on `Client`.
+- HTTP/2 support is not enabled by default due to stability concerns.
+- It is possible to disable HTTP/2 on a single specific domain using `mounts`.
+
+The answer to the question as it stands cannot be directly provided from the given context, as there is no example or documentation that explicitly discusses using both HTTP/1.1 and HTTP/2 simultaneously on the same client instance."
+What happens if a response is streamed but the server drops the connection mid-stream?,hard,adversarial,Miss,NO,4.48s,,"Based on the context, there is no mention of what happens if a response is streamed but the server drops the connection mid-stream."
+Is it possible to pass a raw socket to HTTPX instead of a URL?,hard,adversarial,Miss,NO,4.39s,,"No, it is not possible based on the provided context. 
+
+None of the provided code or documentation suggest a method to pass a raw socket to HTTPX directly. They all use URLs (httpx.URL or full URL schemes like http:// and https://) instead of raw sockets."
+How does HTTPX prevent memory exhaustion when downloading a 10GB file?,hard,adversarial,Miss,NO,4.03s,,"The context does not explicitly mention the steps HTTPX takes to prevent memory exhaustion when downloading large files. However, it does suggest using streaming responses, as mentioned in the [DOC - docs\quickstart.md]: ""For large downloads you may want to use streaming responses that do not load the entire response body into memory at once.""
+
+This implies that HTTPX supports streaming responses, which is used in the provided code to download a 100MB file with `httpx.stream(""GET"", url)`. However, the actual implementation of how HTTPX handles streaming responses to prevent memory exhaustion is not shown in the provided context.
+
+Therefore, the answer to the question cannot be definitively stated based on the provided context."
+"If I set follow_redirects=True, how does HTTPX prevent infinite redirect loops?",hard,adversarial,Miss,NO,4.48s,,"According to the provided context, if you set `follow_redirects=True`, HTTPX does not prevent infinite redirect loops itself, but a test (`test_redirect_loop()`) using `pytest.raises(httpx.TooManyRedirects)` is provided to catch and test this scenario.
+
+However, from the given context, it is clear that when follow_redirects=False and a redirect is received, the client will set `response.next_request` which might not be the mechanism to prevent infinite redirect loops. 
+
+But in test_redirect_loop() in test_redirects.py, the `httpx.TooManyRedirects` exception is raised when there's an infinite loop. 
+
+So the context does imply that HTTPX itself uses the `TooManyRedirects` exception to handle infinite redirect loops, but we cannot directly infer the prevention mechanism as we need additional context."
+What is the exact order of precedence between request-level timeouts and client-level timeouts?,hard,adversarial,3,NO,4.49s,,"Based on the context provided, the order of precedence is: 
+
+1. `Request-level timeouts`
+2. `Client-level timeouts` (if not using `USE_CLIENT_DEFAULT` or `None`)
+
+For example:
+
+- If `timeout` is not in `request.extensions`, the client-level timeout will be used (unless it's `None` or `USE_CLIENT_DEFAULT`).
+- If `timeout` is in `request.extensions`, it will override the client-level timeout."

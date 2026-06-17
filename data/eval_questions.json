@@ -1,0 +1,27 @@
+[
+  {
+    "question": "How does httpx handle connection timeouts?",
+    "category": "Architecture",
+    "expected_source": "docs/advanced/timeouts.md"
+  },
+  {
+    "question": "What happens if I stream a response but don't close it?",
+    "category": "API",
+    "expected_source": "httpx/_models.py"
+  },
+  {
+    "question": "Does httpx encode square brackets in query parameters?",
+    "category": "Issues",
+    "expected_source": "httpx/issues/9012"
+  },
+  {
+    "question": "How do I create a custom transport in httpx?",
+    "category": "Documentation",
+    "expected_source": "docs/advanced/transports.md"
+  },
+  {
+    "question": "What is the default timeout value for AsyncClient?",
+    "category": "API",
+    "expected_source": "tests/test_timeouts.py"
+  }
+]
