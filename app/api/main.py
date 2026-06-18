@@ -112,10 +112,19 @@ async def ask_question(request: QueryRequest, db: Session = Depends(get_db)):
         citations=citations
     )
 
-from fastapi import BackgroundTasks
+from fastapi import BackgroundTasks, Header
 
 @app.post("/api/ingest")
-async def ingest_repository(request: IngestRequest, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+async def ingest_repository(
+    request: IngestRequest, 
+    background_tasks: BackgroundTasks, 
+    db: Session = Depends(get_db),
+    x_api_key: Optional[str] = Header(None)
+):
+    expected_secret = os.getenv("INGEST_SECRET")
+    if expected_secret and x_api_key != expected_secret:
+        raise HTTPException(status_code=401, detail="Invalid X-API-Key header")
+        
     url = request.repo_url.strip()
     m = re.match(r"^https://github\.com/([^/]+)/([^/]+)/?$", url)
     if not m:

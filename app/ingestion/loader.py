@@ -166,6 +166,8 @@ def run_github_ingestion(job_id: int, repo_url: str, owner_repo: str):
         else:
             job.status = "ready"
             job.completed_at = datetime.utcnow()
+            if target_dir.exists():
+                shutil.rmtree(target_dir)
             
     except subprocess.TimeoutExpired:
         job.status = "failed"

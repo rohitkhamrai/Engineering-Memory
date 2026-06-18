@@ -4,3 +4,4 @@ __pycache__/
 *.pyc
 .planning/
 .pytest_cache/
+data/
