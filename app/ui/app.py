@@ -3,10 +3,12 @@ import time
 import streamlit as st
 import requests
 
-API_ASK_URL = "http://localhost:8000/api/ask"
-API_INGEST_URL = "http://localhost:8000/api/ingest"
-API_REPOS_URL = "http://localhost:8000/api/repos"
-API_STATUS_URL = "http://localhost:8000/api/ingest/status"
+API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000")
+
+API_ASK_URL = f"{API_BASE_URL}/api/ask"
+API_INGEST_URL = f"{API_BASE_URL}/api/ingest"
+API_REPOS_URL = f"{API_BASE_URL}/api/repos"
+API_STATUS_URL = f"{API_BASE_URL}/api/ingest/status"
 
 st.set_page_config(page_title="Engineering Memory", page_icon="🧠", layout="wide")
 
