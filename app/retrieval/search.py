@@ -4,18 +4,19 @@ from app.database.models import Chunk
 from app.ingestion.embeddings import generate_embedding
 from typing import List, Dict, Any
 
-def vector_search(query: str, session: Session, top_k: int = 20) -> List[Dict[str, Any]]:
+def vector_search(query: str, session: Session, repository: str = "httpx", top_k: int = 20) -> List[Dict[str, Any]]:
     query_embedding = generate_embedding(query)
     
     # Global retrieval
     sql = text("""
         SELECT id, content, type, source_file, embedding <=> CAST(:query_embedding AS vector) AS distance 
         FROM chunks 
+        WHERE repository = :repository
         ORDER BY distance 
         LIMIT :top_k
     """)
     
-    results = session.execute(sql, {"query_embedding": str(query_embedding), "top_k": top_k}).fetchall()
+    results = session.execute(sql, {"query_embedding": str(query_embedding), "repository": repository, "top_k": top_k}).fetchall()
     
     return [
         {
@@ -28,17 +29,18 @@ def vector_search(query: str, session: Session, top_k: int = 20) -> List[Dict[st
         for r in results
     ]
 
-def fts_search(query: str, session: Session, top_k: int = 20) -> List[Dict[str, Any]]:
+def fts_search(query: str, session: Session, repository: str = "httpx", top_k: int = 20) -> List[Dict[str, Any]]:
     # Global retrieval
     sql = text("""
         SELECT id, content, type, source_file, ts_rank(fts_vector, websearch_to_tsquery('english', :query)) AS rank 
         FROM chunks 
         WHERE fts_vector @@ websearch_to_tsquery('english', :query) 
+          AND repository = :repository
         ORDER BY rank DESC 
         LIMIT :top_k
     """)
     
-    results = session.execute(sql, {"query": query, "top_k": top_k}).fetchall()
+    results = session.execute(sql, {"query": query, "repository": repository, "top_k": top_k}).fetchall()
     
     return [
         {
@@ -51,9 +53,9 @@ def fts_search(query: str, session: Session, top_k: int = 20) -> List[Dict[str, 
         for r in results
     ]
 
-def hybrid_search(query: str, session: Session, top_k: int = 5) -> List[Dict[str, Any]]:
-    vector_results = vector_search(query, session, top_k=20)
-    fts_results = fts_search(query, session, top_k=20)
+def hybrid_search(query: str, session: Session, repository: str = "httpx", top_k: int = 5) -> List[Dict[str, Any]]:
+    vector_results = vector_search(query, session, repository=repository, top_k=20)
+    fts_results = fts_search(query, session, repository=repository, top_k=20)
     
     # Reciprocal Rank Fusion (RRF)
     K = 60

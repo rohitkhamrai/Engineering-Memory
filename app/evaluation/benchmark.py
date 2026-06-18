@@ -103,7 +103,7 @@ def run_benchmark():
             try:
                 # Rate limit protection
                 time.sleep(2.5)
-                response = requests.post(API_URL, json={"question": question_text, "top_k": 5}, timeout=15)
+                response = requests.post(API_URL, json={"question": question_text, "top_k": 5, "repository": "httpx"}, timeout=15)
                 response.raise_for_status()
                 data = response.json()
             except Exception as e:

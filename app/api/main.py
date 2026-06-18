@@ -6,8 +6,12 @@ from pydantic import BaseModel
 from typing import List, Optional
 
 from app.database.connection import get_db
+from app.database.models import IngestionJob, Chunk
 from app.retrieval.search import hybrid_search
 from app.retrieval.evidence import compute_confidence, ConfidenceLevel
+from app.ingestion.loader import run_github_ingestion
+from sqlalchemy import func
+import re
 
 app = FastAPI(title="Engineering Memory API")
 
@@ -17,6 +21,10 @@ MODEL_NAME = os.getenv("LLM_MODEL", "qwen2.5:7b-instruct")
 class QueryRequest(BaseModel):
     question: str
     top_k: int = 5
+    repository: str = "httpx"
+
+class IngestRequest(BaseModel):
+    repo_url: str
 
 class Citation(BaseModel):
     id: int
@@ -66,11 +74,11 @@ Answer:"""
 @app.post("/api/ask", response_model=QueryResponse)
 async def ask_question(request: QueryRequest, db: Session = Depends(get_db)):
     # 1. Retrieve Context
-    results = hybrid_search(request.question, db, top_k=request.top_k)
+    results = hybrid_search(request.question, db, repository=request.repository, top_k=request.top_k)
     
     if not results:
         return QueryResponse(
-            answer="No relevant context found in the codebase or issues.",
+            answer=f"No relevant context found in repository '{request.repository}'.",
             confidence=ConfidenceLevel.UNKNOWN,
             citations=[]
         )
@@ -103,3 +111,57 @@ async def ask_question(request: QueryRequest, db: Session = Depends(get_db)):
         confidence=confidence,
         citations=citations
     )
+
+from fastapi import BackgroundTasks
+
+@app.post("/api/ingest")
+async def ingest_repository(request: IngestRequest, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+    url = request.repo_url.strip()
+    m = re.match(r"^https://github\.com/([^/]+)/([^/]+)/?$", url)
+    if not m:
+        raise HTTPException(status_code=400, detail="URL must be exactly https://github.com/<owner>/<repo>")
+        
+    owner, repo = m.group(1), m.group(2).replace(".git", "")
+    owner_repo = f"{owner}_{repo}"
+    
+    # Check repo size using GitHub API
+    async with httpx.AsyncClient() as client:
+        try:
+            resp = await client.get(f"https://api.github.com/repos/{owner}/{repo}", timeout=10.0)
+            if resp.status_code == 404:
+                raise HTTPException(status_code=404, detail="Repository not found or is private.")
+            resp.raise_for_status()
+            size_kb = resp.json().get("size", 0)
+            if size_kb > 100 * 1024:
+                raise HTTPException(status_code=400, detail="Repository too large. Limit is 100MB.")
+        except httpx.RequestError:
+            pass # ignore network errors to GitHub API for size check
+            
+    # Create Job
+    job = IngestionJob(
+        repo_url=url,
+        status="queued"
+    )
+    db.add(job)
+    db.commit()
+    db.refresh(job)
+    
+    background_tasks.add_task(run_github_ingestion, job.id, url, owner_repo)
+    return {"job_id": job.id, "repository_id": owner_repo, "status": "queued"}
+
+@app.get("/api/ingest/status/{job_id}")
+async def get_ingest_status(job_id: int, db: Session = Depends(get_db)):
+    job = db.query(IngestionJob).filter(IngestionJob.id == job_id).first()
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    return {
+        "status": job.status,
+        "error_message": job.error_message,
+        "started_at": job.started_at,
+        "completed_at": job.completed_at
+    }
+
+@app.get("/api/repos")
+async def list_repositories(db: Session = Depends(get_db)):
+    repos = db.query(Chunk.repository, func.count(Chunk.id)).group_by(Chunk.repository).all()
+    return [{"name": r[0], "chunks": r[1]} for r in repos]

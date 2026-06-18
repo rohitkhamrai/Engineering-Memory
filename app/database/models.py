@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, Float, Enum, Index
+from sqlalchemy import Column, Integer, String, Text, Float, Enum, Index, DateTime
 from sqlalchemy.dialects.postgresql import TSVECTOR
 from pgvector.sqlalchemy import Vector
 from .connection import Base
@@ -16,7 +16,13 @@ class Chunk(Base):
     content = Column(Text, nullable=False)
     type = Column(Enum(ChunkType), nullable=False)
     source_file = Column(String, index=True)
+    repository = Column(String, index=True, default="httpx")
     start_line = Column(Integer, nullable=True)
+    
+    # Semantic Metadata
+    heading = Column(String, nullable=True)
+    parent_heading = Column(String, nullable=True)
+    doc_type = Column(String, nullable=True)
     
     # BAAI/bge-small-en-v1.5 has an embedding dimension of 384
     embedding = Column(Vector(384))
@@ -38,6 +44,16 @@ class Incident(Base):
     fix = Column(Text, nullable=False)
     issue_url = Column(String, nullable=False)
     commit_sha = Column(String, nullable=False)
+
+class IngestionJob(Base):
+    __tablename__ = "ingestion_jobs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    repo_url = Column(String, nullable=False)
+    status = Column(String, nullable=False) # queued, cloning, parsing, embedding, ready, failed
+    error_message = Column(String, nullable=True)
+    started_at = Column(DateTime, nullable=True)
+    completed_at = Column(DateTime, nullable=True)
 
 class EvalResult(Base):
     __tablename__ = "eval_results"

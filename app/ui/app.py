@@ -1,13 +1,85 @@
 import os
+import time
 import streamlit as st
 import requests
 
-API_URL = os.getenv("API_URL", "http://localhost:8000/api/ask")
+API_ASK_URL = "http://localhost:8000/api/ask"
+API_INGEST_URL = "http://localhost:8000/api/ingest"
+API_REPOS_URL = "http://localhost:8000/api/repos"
+API_STATUS_URL = "http://localhost:8000/api/ingest/status"
 
 st.set_page_config(page_title="Engineering Memory", page_icon="🧠", layout="wide")
 
 st.title("🧠 Engineering Memory")
-st.markdown("Ask technical questions about the HTTPX codebase, and get answers backed by **Code**, **Docs**, and **Issues**.")
+st.markdown("Ask technical questions backed by **Code**, **Docs**, and **Issues**.")
+
+# -- SIDEBAR --
+st.sidebar.header("Repository Selection")
+
+# Fetch available repos
+try:
+    repos_resp = requests.get(API_REPOS_URL, timeout=5)
+    if repos_resp.status_code == 200:
+        repos_data = repos_resp.json()
+    else:
+        repos_data = [{"name": "httpx", "chunks": 0}]
+except:
+    repos_data = [{"name": "httpx", "chunks": 0}]
+
+# Dropdown mapping display name -> actual repo name
+repo_options = {f"{r['name']} ({r['chunks']} chunks)": r['name'] for r in repos_data}
+if not repo_options:
+    repo_options = {"httpx (0 chunks)": "httpx"}
+
+selected_display = st.sidebar.selectbox("Current Repository", list(repo_options.keys()))
+selected_repo = repo_options[selected_display]
+
+st.sidebar.markdown("---")
+st.sidebar.header("Ingest New Repository")
+
+repo_url = st.sidebar.text_input("GitHub URL", placeholder="https://github.com/owner/repo")
+if st.sidebar.button("Ingest"):
+    if not repo_url:
+        st.sidebar.error("URL required")
+    else:
+        resp = requests.post(API_INGEST_URL, json={"repo_url": repo_url})
+        if resp.status_code == 200:
+            st.session_state.job_id = resp.json()["job_id"]
+            st.rerun()
+        else:
+            err = resp.json().get("detail", "Ingest failed")
+            if isinstance(err, list):
+                st.sidebar.error(f"Error: {err[0].get('msg', 'Invalid request')}")
+            else:
+                st.sidebar.error(f"Error: {err}")
+
+# Polling for ingest status
+if "job_id" in st.session_state:
+    job_id = st.session_state.job_id
+    try:
+        status_resp = requests.get(f"{API_STATUS_URL}/{job_id}")
+        if status_resp.status_code == 200:
+            status_data = status_resp.json()
+            status = status_data["status"]
+            st.sidebar.info(f"Ingestion Status: **{status}**")
+            
+            if status == "failed":
+                st.sidebar.error(status_data.get("error_message", "Unknown error"))
+                if st.sidebar.button("Dismiss"):
+                    del st.session_state.job_id
+                    st.rerun()
+            elif status == "ready":
+                st.sidebar.success("Ingestion Complete!")
+                if st.sidebar.button("Refresh"):
+                    del st.session_state.job_id
+                    st.rerun()
+            else:
+                time.sleep(2)
+                st.rerun()
+    except Exception as e:
+        st.sidebar.error("Failed to check status.")
+
+# -- MAIN CHAT --
 
 # Initialize chat history
 if "messages" not in st.session_state:
@@ -25,16 +97,14 @@ def get_badge_color(confidence: str) -> str:
     return "grey"
 
 # React to user input
-if prompt := st.chat_input("How does httpx handle connection timeouts?"):
-    # Display user message in chat message container
+if prompt := st.chat_input(f"Ask a question about {selected_repo}..."):
     st.chat_message("user").markdown(prompt)
-    # Add user message to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
 
     with st.chat_message("assistant"):
-        with st.spinner("Searching repository and analyzing evidence..."):
+        with st.spinner(f"Searching {selected_repo} and analyzing evidence..."):
             try:
-                response = requests.post(API_URL, json={"question": prompt, "top_k": 5}, timeout=120)
+                response = requests.post(API_ASK_URL, json={"question": prompt, "top_k": 5, "repository": selected_repo}, timeout=120)
                 if response.status_code == 200:
                     data = response.json()
                     answer = data.get("answer", "")

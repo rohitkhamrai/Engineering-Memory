@@ -10,6 +10,14 @@ Engineers spend an enormous amount of time searching through sprawling codebases
 
 Engineering Memory was built to solve this by providing **honest, evidence-backed answers** with measurable retrieval quality. It separates generation accuracy from retrieval performance, relying on a mathematically sound Confidence Engine to ensure developers can trust the output.
 
+## What's New in v1.1-alpha
+
+- **Markdown-aware document chunking**
+- **Repository-scoped retrieval**
+- **Public GitHub URL ingestion**
+- **Background ingestion jobs**
+- **Multi-repository support**
+
 ## Features
 - **Hybrid Search Engine:** Combines PostgreSQL FTS (Full Text Search) for exact keyword matches with `pgvector` HNSW for semantic understanding.
 - **Honest Confidence Engine:** Evaluates the diversity and relevance of retrieved sources (`DOC`, `CODE`, `ISSUE`) before generating an answer. If evidence is lacking, the system abstains instead of hallucinating.
