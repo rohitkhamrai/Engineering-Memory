@@ -44,7 +44,12 @@ if st.sidebar.button("Ingest"):
     if not repo_url:
         st.sidebar.error("URL required")
     else:
-        resp = requests.post(API_INGEST_URL, json={"repo_url": repo_url})
+        headers = {}
+        secret = os.getenv("INGEST_SECRET")
+        if secret:
+            headers["X-API-Key"] = secret
+            
+        resp = requests.post(API_INGEST_URL, json={"repo_url": repo_url}, headers=headers)
         if resp.status_code == 200:
             st.session_state.job_id = resp.json()["job_id"]
             st.rerun()
