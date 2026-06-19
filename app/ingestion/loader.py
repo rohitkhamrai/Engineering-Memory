@@ -134,6 +134,9 @@ def run_github_ingestion(job_id: int, repo_url: str, owner_repo: str):
         target_dir.mkdir(parents=True, exist_ok=True)
         
         # Clone
+        git_path = shutil.which("git")
+        print(f"DEBUG: git path: {git_path}")
+        print(f"DEBUG: PATH env: {os.environ.get('PATH')}")
         subprocess.run(["git", "clone", "--depth", "1", repo_url, str(target_dir)], check=True, timeout=300, capture_output=True)
         
         job.status = "parsing"
