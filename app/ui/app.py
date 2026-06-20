@@ -2,6 +2,7 @@ import os
 import time
 import streamlit as st
 import requests
+from pathlib import Path
 
 API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000")
 
@@ -15,18 +16,16 @@ st.set_page_config(page_title="Engineering Memory", page_icon="🧠", layout="ce
 # --- CSS Theme Injection ---
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-
 html, body, [class*="css"] {
-    font-family: 'Inter', system-ui, sans-serif !important;
+    font-family: Inter, system-ui, sans-serif !important;
 }
 
 .glass-card {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.06);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
     padding: 20px;
     margin-bottom: 16px;
 }
@@ -93,14 +92,17 @@ html, body, [class*="css"] {
 """, unsafe_allow_html=True)
 
 # Fetch available repos
+api_status = "🟢 Online"
 try:
     repos_resp = requests.get(API_REPOS_URL, timeout=5)
     if repos_resp.status_code == 200:
         repos_data = repos_resp.json()
     else:
         repos_data = [{"name": "httpx", "chunks": 0}]
+        api_status = "🟡 Offline / No Data"
 except:
     repos_data = [{"name": "httpx", "chunks": 0}]
+    api_status = "🔴 Offline"
 
 # Dropdown mapping display name -> actual repo name
 repo_options = {f"{r['name']}": r['name'] for r in repos_data}
@@ -205,7 +207,7 @@ st.markdown(f"""
 <div style="display:flex; gap: 24px; font-size: 0.85em; color: #888; margin-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 16px;">
     <div><b>Repositories:</b> {total_repos}</div>
     <div><b>Chunks:</b> {total_chunks:,}</div>
-    <div><b>Status:</b> 🟢 Healthy</div>
+    <div><b>Status:</b> {api_status}</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -259,7 +261,8 @@ if prompt := st.chat_input(f"Ask a question about {selected_repo}..."):
                     if citations:
                         citations_html = "<div style='margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px;'>"
                         for c in citations:
-                            citations_html += f"<span class='citation-chip'>[{c['type']}] {c['source_file']}</span>"
+                            short_name = Path(c['source_file']).name
+                            citations_html += f"<span class='citation-chip'>[{c['type']}] {short_name}</span>"
                         citations_html += "</div>"
                     
                     # Render sequentially to preserve native markdown parsing for the answer
