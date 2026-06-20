@@ -2,6 +2,7 @@ import os
 import json
 import subprocess
 import shutil
+import traceback
 from datetime import datetime
 from pathlib import Path
 from sqlalchemy.orm import Session
@@ -117,79 +118,83 @@ def update_fts_vectors(session: Session, repository: str):
     session.commit()
 
 def run_github_ingestion(job_id: int, repo_url: str, owner_repo: str):
-    session = SessionLocal()
-    job = session.query(IngestionJob).filter_by(id=job_id).first()
-    if not job:
-        session.close()
-        return
-
-    job.status = "cloning"
-    job.started_at = datetime.utcnow()
-    session.commit()
-    
-    target_dir = Path(f"data/repos/{job_id}")
     try:
-        if target_dir.exists():
-            shutil.rmtree(target_dir)
-        target_dir.mkdir(parents=True, exist_ok=True)
-        
-        # Clone
-        git_path = shutil.which("git")
-        print(f"DEBUG: git path: {git_path}")
-        print(f"DEBUG: PATH env: {os.environ.get('PATH')}")
-        subprocess.run(["git", "clone", "--depth", "1", repo_url, str(target_dir)], check=True, timeout=300, capture_output=True)
-        
-        job.status = "parsing"
+        session = SessionLocal()
+        job = session.query(IngestionJob).filter_by(id=job_id).first()
+        if not job:
+            session.close()
+            return
+    
+        job.status = "cloning"
+        job.started_at = datetime.utcnow()
         session.commit()
         
-        # Parse & Embed
-        for root, dirs, files in os.walk(target_dir):
-            if ".git" in dirs:
-                dirs.remove(".git")
-            for file in files:
-                file_path = Path(root) / file
-                if file.endswith(".py"):
-                    process_python_file(file_path, session, repository=owner_repo, base_dir=target_dir)
-                elif file.endswith(".md"):
-                    process_markdown_file(file_path, session, repository=owner_repo, base_dir=target_dir)
-        
-        job.status = "embedding"
-        session.commit()
-        
-        # FTS Update
-        update_fts_vectors(session, repository=owner_repo)
-        
-        # Post Ingest Smoke Test
-        from app.retrieval.search import hybrid_search
-        smoke = hybrid_search("What is this repository?", session, repository=owner_repo, top_k=1)
-        if len(smoke) == 0:
-            job.status = "failed"
-            job.error_message = "Smoke test failed: 0 citations retrieved."
-            shutil.rmtree(target_dir)
-        else:
-            job.status = "ready"
-            job.completed_at = datetime.utcnow()
+        target_dir = Path(f"data/repos/{job_id}")
+        try:
             if target_dir.exists():
                 shutil.rmtree(target_dir)
+            target_dir.mkdir(parents=True, exist_ok=True)
             
-    except subprocess.TimeoutExpired:
-        job.status = "failed"
-        job.error_message = "Git clone timed out after 300s."
-        if target_dir.exists():
-            shutil.rmtree(target_dir)
-    except subprocess.CalledProcessError as e:
-        job.status = "failed"
-        job.error_message = f"Git clone failed: {e.stderr.decode('utf-8', errors='ignore')}"
-        if target_dir.exists():
-            shutil.rmtree(target_dir)
-    except Exception as e:
-        job.status = "failed"
-        job.error_message = str(e)
-        if target_dir.exists():
-            shutil.rmtree(target_dir)
-    finally:
-        session.commit()
-        session.close()
+            # Clone
+            git_path = shutil.which("git")
+            print(f"DEBUG: git path: {git_path}")
+            print(f"DEBUG: PATH env: {os.environ.get('PATH')}")
+            subprocess.run(["git", "clone", "--depth", "1", repo_url, str(target_dir)], check=True, timeout=300, capture_output=True)
+            
+            job.status = "parsing"
+            session.commit()
+            
+            # Parse & Embed
+            for root, dirs, files in os.walk(target_dir):
+                if ".git" in dirs:
+                    dirs.remove(".git")
+                for file in files:
+                    file_path = Path(root) / file
+                    if file.endswith(".py"):
+                        process_python_file(file_path, session, repository=owner_repo, base_dir=target_dir)
+                    elif file.endswith(".md"):
+                        process_markdown_file(file_path, session, repository=owner_repo, base_dir=target_dir)
+            
+            job.status = "embedding"
+            session.commit()
+            
+            # FTS Update
+            update_fts_vectors(session, repository=owner_repo)
+            
+            # Post Ingest Smoke Test
+            from app.retrieval.search import hybrid_search
+            smoke = hybrid_search("What is this repository?", session, repository=owner_repo, top_k=1)
+            if len(smoke) == 0:
+                job.status = "failed"
+                job.error_message = "Smoke test failed: 0 citations retrieved."
+                shutil.rmtree(target_dir)
+            else:
+                job.status = "ready"
+                job.completed_at = datetime.utcnow()
+                if target_dir.exists():
+                    shutil.rmtree(target_dir)
+                
+        except subprocess.TimeoutExpired:
+            job.status = "failed"
+            job.error_message = "Git clone timed out after 300s."
+            if target_dir.exists():
+                shutil.rmtree(target_dir)
+        except subprocess.CalledProcessError as e:
+            job.status = "failed"
+            job.error_message = f"Git clone failed: {e.stderr.decode('utf-8', errors='ignore')}"
+            if target_dir.exists():
+                shutil.rmtree(target_dir)
+        except Exception as e:
+            job.status = "failed"
+            job.error_message = str(e)
+            if target_dir.exists():
+                shutil.rmtree(target_dir)
+        finally:
+            session.commit()
+            session.close()
+    except Exception:
+        traceback.print_exc()
+        raise
 
 def load_issues(session: Session):
     if not ISSUES_FILE.exists():
